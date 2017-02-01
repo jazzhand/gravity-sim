@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Space</title>
+    <link rel="stylesheet" href="style.css" media="screen">
+  </head>
+
+  <body>
+    <canvas id="canvas" width="800" height="800">
+      <!-- Failed to load canvas-->
+      Could not load canvas to draw on.
+    </canvas>
+
+    <aside class="debug">
+      <table id="debug-table">
+        <tr>
+          <th>Radius</th><td id="radius-val"></td>
+        </tr>
+        <tr>
+          <th>Force</th><td id="force-val"></td>
+        </tr>
+        <tr>
+          <th>Moon Velocity</th><td id="moon-speed-val"></td>
+        </tr>
+      </table>
+    </aside>
+    <script src='space.js'></script>
+  </body>
+</html>

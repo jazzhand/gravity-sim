@@ -1,0 +1,32 @@
+#canvas {
+  display: block;
+  border: 1px solid;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#debug-table, td {
+  border: 2px solid #eee;
+  border-collapse: collapse;
+  border-radius: 4px;
+  font-family: sans-serif;
+}
+
+.debug {
+  position: absolute;
+  padding: 8px;
+  top: 10px;
+  right: 10px;
+  background-color: #3a5;
+  border-radius: 4px;
+}
+
+td {
+  padding: 10px;
+  width: 220px;
+}
+
+th {
+  width: 100px;
+  color: white;
+}
