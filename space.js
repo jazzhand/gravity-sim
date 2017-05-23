@@ -66,6 +66,10 @@ class System {
    getEntities() {
     return this.entities;
   }
+
+  setTimeScale(ts) {
+    this.timeScale = ts;
+  }
 }
 
 //export
@@ -105,13 +109,13 @@ class Renderer {
 // main execution
 (function(){
   // Some constants
-  const colBG = "rgba(20, 20, 20, 0.6)";
-  const colEarth = "#3bf";
-  const colMoon = "#e66";
+  const colBG = "rgba(16, 16, 16, 0.4)";
+  const colEarth = "#3af";
+  const colMoon = "#e85";
   const canvasWidth = 800;
   const canvasHeight = 800;
 
-  let earth = new Entity(5.972e24, 400, 400, 0.1, -12, 6371000);
+  let earth = new Entity(5.972e24, 400, 400, 0.2, -12, 6371000);
   let moon = new Entity(7.347673e22, 400 - 384400000/scale, 400, 0, 1023.006, 1737000);
 
   let system = new System([earth, moon], scale);
