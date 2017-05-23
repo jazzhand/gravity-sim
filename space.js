@@ -1,12 +1,6 @@
-// Main module
-// Some constants
-const scale = 1100000; // real scale to canvas scale
-const colBG = "rgba(20, 20, 20, 0.6)";
-const colEarth = "#39f";
-const colMoon = "#f82";
-const canvasWidth = 800;
-const canvasHeight = 800;
+const scale = 1100000;
 
+//export
 class Entity {
   /* Represents an object in space with significant mass */
   constructor(m, x, y, vx, vy, r) {
@@ -18,12 +12,12 @@ class Entity {
     this.radius = r / scale; // radius for canvas arcs
   }
 }
-
+//export
 class System {
   /* Represents the system of entities with newtonian physics */
   constructor(ents) {
     this.entities = ents; // array of entities in the system
-    this.scale = 1100000; // real scale to canvas scale
+    this.scale = scale; // real scale to canvas scale
     this.lastTime = performance.now(); // last time a physicsStep was taken
     this.dt = 1/60; // intial time step, changes over time
     this.timeScale = 64;
@@ -61,8 +55,8 @@ class System {
       obj.velX += this.dt * xForces[i] / obj.mass;
       obj.velY += this.dt * yForces[i] / obj.mass;
 
-      obj.locX += this.dt * obj.velX/(scale);
-      obj.locY += this.dt * obj.velY/(scale);
+      obj.locX += this.dt * obj.velX/(this.scale);
+      obj.locY += this.dt * obj.velY/(this.scale);
     }
 
     this.dt = this.timeScale * (currentTime - this.lastTime);
@@ -74,6 +68,7 @@ class System {
   }
 }
 
+//export
 class Renderer {
   constructor(canvasID) {
     this.canvas = document.getElementById(canvasID);
@@ -107,15 +102,19 @@ class Renderer {
   }
 }
 
-// Renderer.prototype.animationStep = function(ts) {
-//   window.requestAnimationFrame()
-// };
+// main execution
+(function(){
+  // Some constants
+  const colBG = "rgba(20, 20, 20, 0.6)";
+  const colEarth = "#3bf";
+  const colMoon = "#e66";
+  const canvasWidth = 800;
+  const canvasHeight = 800;
 
-(function() {
   let earth = new Entity(5.972e24, 400, 400, 0.1, -12, 6371000);
   let moon = new Entity(7.347673e22, 400 - 384400000/scale, 400, 0, 1023.006, 1737000);
 
-  let system = new System([earth, moon]);
+  let system = new System([earth, moon], scale);
   let renderer = new Renderer('canvas');
   let ctx = renderer.context();
 
@@ -145,10 +144,4 @@ class Renderer {
 
   renderer.setAnimationRoutine(animationStep);
   renderer.animate();
-
-  // for (let i = 0; i < 10; i++) {
-  //   drawSystem();
-  //   system.physicsStep(1/60);
-  // }
-
 })();
