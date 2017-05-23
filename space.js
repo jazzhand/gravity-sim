@@ -11,16 +11,32 @@ class Entity {
     this.velY = vy; // real y velocity (m/s)
     this.radius = r / scale; // radius for canvas arcs
   }
+
+  static distanceBetween(e1, e2) {
+    let dx = e2.locX - e1.locX;
+    let dy = e2.locY - e1.locY;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
 }
 //export
 class System {
   /* Represents the system of entities with newtonian physics */
   constructor(ents) {
-    this.entities = ents; // array of entities in the system
+    if (!ents) {
+      this.entities = []
+    } else {
+      this.entities = ents; // array of entities in the system
+    }
     this.scale = scale; // real scale to canvas scale
     this.lastTime = performance.now(); // last time a physicsStep was taken
     this.dt = 1/60; // intial time step, changes over time
     this.timeScale = 64;
+  }
+
+  // TODO implement graphical labels
+  // TODO implement fixed entities that stay stationary
+  addEntity(ent, label, fixed) {
+    this.entities.push(ent);
   }
 
   physicsStep(currentTime) {
@@ -104,23 +120,31 @@ class Renderer {
       window.cancelAnimationFrame(this.animation);
     }
   }
+
+  canvasWidth() {
+    return this.canvas.width;
+  }
+
+  canvasHeight() {
+    return this.canvas.height;
+  }
 }
 
 // main execution
 (function(){
-  // Some constants
-  const colBG = "rgba(16, 16, 16, 0.4)";
-  const colEarth = "#3af";
-  const colMoon = "#e85";
-  const canvasWidth = 800;
-  const canvasHeight = 800;
-
   let earth = new Entity(5.972e24, 400, 400, 0.2, -12, 6371000);
   let moon = new Entity(7.347673e22, 400 - 384400000/scale, 400, 0, 1023.006, 1737000);
 
   let system = new System([earth, moon], scale);
   let renderer = new Renderer('canvas');
   let ctx = renderer.context();
+
+  // Some constants
+  const canvasWidth = renderer.canvasWidth();
+  const canvasHeight = renderer.canvasHeight();
+  const colBG = "rgba(16, 16, 16, 0.8)";
+  const colEarth = "#3af";
+  const colMoon = "#e85";
 
   function animationStep(ts) {
     ctx.fillStyle = colBG;
@@ -130,6 +154,14 @@ class Renderer {
     let bodies = system.getEntities();
     let b1 = bodies[0]; //earth
     let b2 = bodies[1]; //moon
+
+    // Draw line between Earth and moon
+    ctx.beginPath();
+    ctx.moveTo(b1.locX, b1.locY);
+    ctx.lineTo(b2.locX, b2.locY);
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 0.2;
+    ctx.stroke();
 
     // Draw the earth
     ctx.fillStyle = colEarth;
@@ -143,9 +175,23 @@ class Renderer {
     ctx.arc(b2.locX, b2.locY, b2.radius, 0, 2*Math.PI);
     ctx.fill();
 
+    // Draw distance label
+    ctx.fillStyle = "white";
+    ctx.font = "12px Monospace";
+    ctx.fillText((scale/1000 * Entity.distanceBetween(b1, b2)).toPrecision(8) + " km",
+     0 + b1.locX + 0.4*(b2.locX - b1.locX),
+    20 + b1.locY + 0.4*(b2.locY - b1.locY));
+
+    //Draw Earth label
+    ctx.fillText("Earth", b1.locX - 20, b1.locY - 28);
+
+    //Draw Moon label
+    ctx.fillText("Moon", b2.locX - 16, b2.locY - 28);
+
     system.physicsStep(ts);
   }
 
+  system.setTimeScale(8);
   renderer.setAnimationRoutine(animationStep);
   renderer.animate();
 })();
