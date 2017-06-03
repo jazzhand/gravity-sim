@@ -7,10 +7,26 @@
   </head>
 
   <body>
-    <canvas id="canvas" width="800" height="800">
-      <!-- Failed to load canvas-->
-      Could not load canvas to draw on.
-    </canvas>
+    <div class="main">
+      <canvas id="canvas" width="800" height="800">
+        <!-- Failed to load canvas-->
+        Could not load canvas to draw on.
+      </canvas>
+
+      <div id="controls-div">
+        <form class="control-form">
+          <h2>Controls</h2>
+          <label for="time-scale">Time scale: </label>
+          <input type="number" name="time-scale" min="1" value="128"><br>
+          <label for="size-scale">Size scale: </label>
+          <input type="number" name="size-scale" value="1100000">
+          <hr>
+          <input id="start-but" type="button" name="start-simulation" value="Commence">
+          <input id="pause-but" type="button" name="pause-simulation" value="Pause">
+          <input id="reset-but" type="button" name="reset-params" value="Reset">
+        </form>
+      </div>
+    </div>
     <script src="space.js"></script>
   </body>
 </html>

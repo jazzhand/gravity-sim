@@ -1,3 +1,7 @@
+hr {
+  margin: 20px;
+}
+
 #canvas {
   display: block;
   border: 1px solid;
@@ -5,6 +9,68 @@
   margin-right: auto;
 }
 
+#controls-div {
+  position: absolute;
+  top: 10px;
+  right: -326px;
+  padding: 8px;
+  padding-left: 16px;
+  border-radius: 8px;
+  border-left: 2px solid #777;
+
+  width: 256px;
+  font-family: monospace;
+  font-size: 16px;
+
+}
+
+#controls-div input {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+#controls-div input[type="number"] {
+  max-width: 30%;
+  padding-left: 8px;
+  border: none;
+  border-bottom: 2px solid black;
+  font-size: 16px;
+
+  background-color: transparent;
+}
+
+#controls-div input[type="number"]:focus {
+  outline: none;
+  border-color: #44aaff;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#controls-div input[type="button"] {
+  padding: 8px;
+  color: white;
+  border: 2px solid white;
+  background-color: #3a5;
+}
+
+#controls-div input[type="button"]:focus {
+  outline: none;
+}
+
+.main {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+
+  width: 800px;
+  background-color: yellowgreen;
+}
+/*
 #debug-table, td {
   border: 2px solid #eee;
   border-collapse: collapse;
@@ -29,4 +95,4 @@ td {
 th {
   width: 100px;
   color: white;
-}
+}*/

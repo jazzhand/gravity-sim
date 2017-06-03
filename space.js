@@ -33,7 +33,7 @@ class System {
     this.timeScale = 64;
   }
 
-  // TODO implement graphical labels
+  // TODO implement ids/labels per entity
   // TODO implement fixed entities that stay stationary
   addEntity(ent, label, fixed) {
     this.entities.push(ent);
@@ -75,7 +75,12 @@ class System {
       obj.locY += this.dt * obj.velY/(this.scale);
     }
 
-    this.dt = this.timeScale * (currentTime - this.lastTime);
+    /* This little line beneath causes huge dt when the animation is paused
+       and returned to again. Which causes terrible anomilies in the physics.
+       It was put in place to allow smooth animation despite varying framerate.
+    */
+    // this.dt = this.timeScale * (currentTime - this.lastTime);
+    this.dt = this.timeScale * 1000/60;
     this.lastTime = currentTime;
   }
 
@@ -130,9 +135,26 @@ class Renderer {
   }
 }
 
+//export
+class Controls {
+  constructor(sys) {
+    this.system = sys;
+
+    let startBut = document.getElementById("start-but");
+    let pauseBut = document.getElementById("pause-but");
+
+    startBut.addEventListener("click", function() {
+      window.alert("wow");
+    });
+    pauseBut.addEventListener("click", function() {
+      window.alert("congratulations");
+    });
+  }
+}
+
 // main execution
 (function(){
-  let earth = new Entity(5.972e24, 400, 400, 0.2, -12, 6371000);
+  let earth = new Entity(5.972e24, 400, 400, 0.1, -12.8, 6371000);
   let moon = new Entity(7.347673e22, 400 - 384400000/scale, 400, 0, 1023.006, 1737000);
 
   let system = new System([earth, moon], scale);
@@ -163,17 +185,24 @@ class Renderer {
     ctx.lineWidth = 0.2;
     ctx.stroke();
 
-    // Draw the earth
+    // Draw the Earth
     ctx.fillStyle = colEarth;
     ctx.beginPath();
     ctx.arc(b1.locX, b1.locY, b1.radius, 0, 2*Math.PI);
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "#6bf";
     ctx.fill();
 
-    //Draw the moon
+    // Draw the Moon
     ctx.fillStyle = colMoon;
     ctx.beginPath();
     ctx.arc(b2.locX, b2.locY, b2.radius, 0, 2*Math.PI);
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = "white"
     ctx.fill();
+
+    // Stop drawing shadows/glows
+    ctx.shadowBlur = 0;
 
     // Draw distance label
     ctx.fillStyle = "white";
@@ -182,16 +211,32 @@ class Renderer {
      0 + b1.locX + 0.4*(b2.locX - b1.locX),
     20 + b1.locY + 0.4*(b2.locY - b1.locY));
 
-    //Draw Earth label
+    // Draw Earth label
     ctx.fillText("Earth", b1.locX - 20, b1.locY - 28);
 
-    //Draw Moon label
+    // Draw Moon label
     ctx.fillText("Moon", b2.locX - 16, b2.locY - 28);
+
+    // Draw center cross
+    ctx.beginPath();
+    ctx.moveTo(canvasWidth/2, canvasHeight/2 - 10);
+    ctx.lineTo(canvasWidth/2, canvasHeight/2 + 10);
+    ctx.moveTo(canvasWidth/2 - 10, canvasHeight/2);
+    ctx.lineTo(canvasWidth/2 + 10, canvasHeight/2);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "white";
+    ctx.stroke();
+
+    // Draw other information
+    let ev = Math.sqrt(b1.velX*b1.velX + b1.velY*b1.velY);
+    let mv = Math.sqrt(b2.velX*b2.velX + b2.velY*b2.velY);
+    ctx.fillText("Earth's velocity (m/s): " + ev.toPrecision(6), 10, 20);
+    ctx.fillText("Moon's velocity (m/s): " + mv.toPrecision(6), 10, 40);
 
     system.physicsStep(ts);
   }
 
-  system.setTimeScale(8);
+  // system.setTimeScale(1);
   renderer.setAnimationRoutine(animationStep);
   renderer.animate();
 })();
