@@ -18,6 +18,7 @@ class Entity {
     return Math.sqrt(dx*dx + dy*dy);
   }
 }
+
 //export
 class System {
   /* Represents the system of entities with newtonian physics */
@@ -28,9 +29,9 @@ class System {
       this.entities = ents; // array of entities in the system
     }
     this.scale = scale; // real scale to canvas scale
-    this.lastTime = performance.now(); // last time a physicsStep was taken
-    this.dt = 1/60; // intial time step, changes over time
     this.timeScale = 64;
+    this.lastTime = performance.now(); // last time a physicsStep was taken
+    this.dt = 1000/60; // intial time step, changes over time
   }
 
   // TODO implement ids/labels per entity
@@ -154,11 +155,12 @@ class Controls {
 
 // main execution
 (function(){
-  let earth = new Entity(5.972e24, 400, 400, 0.1, -12.8, 6371000);
+  let earth = new Entity(5.972e24, 400, 400, 0.1, -12.6, 6371000);
   let moon = new Entity(7.347673e22, 400 - 384400000/scale, 400, 0, 1023.006, 1737000);
 
   let system = new System([earth, moon], scale);
   let renderer = new Renderer('canvas');
+  let controls = new Controls(system);
   let ctx = renderer.context();
 
   // Some constants
@@ -230,7 +232,8 @@ class Controls {
     // Draw other information
     let ev = Math.sqrt(b1.velX*b1.velX + b1.velY*b1.velY);
     let mv = Math.sqrt(b2.velX*b2.velX + b2.velY*b2.velY);
-    ctx.fillText("Earth's velocity (m/s): " + ev.toPrecision(6), 10, 20);
+    // ctx.fillText("Earth's velocity (m/s): " + ev.toPrecision(6), 10, 20);
+    ctx.fillText("Earth's yVel (m/s): " + b1.velY.toPrecision(6), 10, 20);
     ctx.fillText("Moon's velocity (m/s): " + mv.toPrecision(6), 10, 40);
 
     system.physicsStep(ts);
