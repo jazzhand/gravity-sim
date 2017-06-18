@@ -89,8 +89,20 @@ class System {
     return this.entities;
   }
 
+  setSizeScale(ss) {
+    this.scale = ss;
+  }
+
+  getSizeScale() {
+    return this.scale;
+  }
+
   setTimeScale(ts) {
     this.timeScale = ts;
+  }
+
+  getTimeScale() {
+    return this.timeScale;
   }
 }
 
@@ -112,18 +124,22 @@ class Renderer {
   }
 
   animate() {
-    let parent = this;
-    function animationStep(ts) {
-      window.requestAnimationFrame(animationStep);
-      parent.render(ts);
-    }
+    if (!this.animation) {
+      let parent = this;
+      function animationStep(ts) {
+        parent.animation = window.requestAnimationFrame(animationStep);
+        parent.render(ts);
+      }
 
-    this.animation = window.requestAnimationFrame(animationStep);
+      this.animation = window.requestAnimationFrame(animationStep);
+    }
   }
 
   stop() {
-    if (!this.animation) {
+    if (this.animation) {
+      console.log("what");
       window.cancelAnimationFrame(this.animation);
+      this.animation = null;
     }
   }
 
@@ -138,17 +154,46 @@ class Renderer {
 
 //export
 class Controls {
-  constructor(sys) {
+  constructor(sys, rend) {
     this.system = sys;
 
+    /* Controls Div */
+    let ctrlDiv = document.getElementById('controls-div');
+
+    /* Input fields */
+    let tsField = document.getElementById("ts");
+    let ssField = document.getElementById("ss");
+
+    /* Buttons */
     let startBut = document.getElementById("start-but");
     let pauseBut = document.getElementById("pause-but");
+    let resetBut = document.getElementById('reset-but');
+
+    /* Populate fields with initial values */
+    tsField.value = sys.getTimeScale();
+    ssField.value = sys.getSizeScale();
+
+
+    ctrlDiv.addEventListener("keyup", function(e) {
+      if (e.keyCode == 13) {
+        startBut.click();
+      }
+    });
 
     startBut.addEventListener("click", function() {
-      window.alert("wow");
+      sys.setTimeScale(tsField.value);
+      sys.setSizeScale(ssField.value);
+      rend.animate();
     });
+
     pauseBut.addEventListener("click", function() {
-      window.alert("congratulations");
+      rend.stop();
+    });
+
+    resetBut.addEventListener("click", function() {
+      rend.stop();
+      tsField.value = 64;
+      ssField.value = 1100000;
     });
   }
 }
@@ -160,7 +205,7 @@ class Controls {
 
   let system = new System([earth, moon], scale);
   let renderer = new Renderer('canvas');
-  let controls = new Controls(system);
+  let controls = new Controls(system, renderer);
   let ctx = renderer.context();
 
   // Some constants
@@ -169,6 +214,21 @@ class Controls {
   const colBG = "rgba(16, 16, 16, 0.8)";
   const colEarth = "#3af";
   const colMoon = "#e85";
+
+  function drawVelocityVector(cont, angle, x, y) {
+    cont.save();
+    cont.translate(x, y);
+    cont.strokeRect(-16, -16, 32, 32);
+    cont.rotate(Math.PI/2 - angle);
+    cont.beginPath();
+    cont.moveTo(0, 12);
+    cont.lineTo(0, -12);
+    cont.moveTo(-4, -6);
+    cont.lineTo(0, -12);
+    cont.lineTo(4, -6);
+    cont.stroke();
+    cont.restore();
+  }
 
   function animationStep(ts) {
     ctx.fillStyle = colBG;
@@ -210,8 +270,8 @@ class Controls {
     ctx.fillStyle = "white";
     ctx.font = "12px Monospace";
     ctx.fillText((scale/1000 * Entity.distanceBetween(b1, b2)).toPrecision(8) + " km",
-     0 + b1.locX + 0.4*(b2.locX - b1.locX),
-    20 + b1.locY + 0.4*(b2.locY - b1.locY));
+     0 + b1.locX + 0.3*(b2.locX - b1.locX),
+    20 + b1.locY + 0.3*(b2.locY - b1.locY));
 
     // Draw Earth label
     ctx.fillText("Earth", b1.locX - 20, b1.locY - 28);
@@ -232,14 +292,22 @@ class Controls {
     // Draw other information
     let ev = Math.sqrt(b1.velX*b1.velX + b1.velY*b1.velY);
     let mv = Math.sqrt(b2.velX*b2.velX + b2.velY*b2.velY);
-    // ctx.fillText("Earth's velocity (m/s): " + ev.toPrecision(6), 10, 20);
-    ctx.fillText("Earth's yVel (m/s): " + b1.velY.toPrecision(6), 10, 20);
-    ctx.fillText("Moon's velocity (m/s): " + mv.toPrecision(6), 10, 40);
+    ctx.fillText("Earth's velocity (m/s): " + ev.toPrecision(6), 10, 24);
+    //ctx.fillText("Earth's yVel (m/s): " + b1.velY.toPrecision(6), 10, 20);
+    ctx.fillText("Moon's velocity (m/s): " + mv.toPrecision(6), 10, 64);
+
+    let earthVelocityAngle = Math.atan2(-b1.velY, b1.velX);
+    let moonVelocityAngle = Math.atan2(-b2.velY, b2.velX);
+    // ctx.fillText("angle: " + moonVelocityAngle, 10, 100);
+
+    // Draw Earth's velocity vector
+    drawVelocityVector(ctx, earthVelocityAngle, 256, 20);
+    // Draw Moon's velocity vector
+    drawVelocityVector(ctx, moonVelocityAngle, 256, 60);
 
     system.physicsStep(ts);
   }
 
-  // system.setTimeScale(1);
   renderer.setAnimationRoutine(animationStep);
   renderer.animate();
 })();
