@@ -200,10 +200,29 @@ class Controls {
 
 // main execution
 (function(){
-  let earth = new Entity(5.972e24, 400, 400, 0.1, -12.6, 6371000);
-  let moon = new Entity(7.347673e22, 400 - 384400000/scale, 400, 0, 1023.006, 1737000);
+  let arrangements = [
+    {
+      title: "Earth-Moon System",
+      scale: 1100000,
+      entities: {
+        earth: [5.972e24, 400, 400, 0.1, -12.6, 6371000],
+        moon: [7.347673e22, 400 - 384400000/1100000, 400, 0, 1023.006, 1737000]
+      }
+    },
+    {
+      title: "Sun-Earth System",
+      scale: 1100000,
+      entities: {
+        sun: [7.347673e22, 400 - 384400000/1100000, 400, 0, 1023.006, 1737000],
+        earth: [5.972e24, 400, 400, 0.1, -12.6, 6371000]
+      }
+    }
+  ];
 
-  let system = new System([earth, moon], scale);
+  let earth = new Entity(...arrangements[0].entities.earth);
+  let moon = new Entity(...arrangements[0].entities.moon);
+
+  let system = new System([earth, moon], arrangements[0].scale);
   let renderer = new Renderer('canvas');
   let controls = new Controls(system, renderer);
   let ctx = renderer.context();

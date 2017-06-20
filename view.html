@@ -14,14 +14,23 @@
       <div id="controls-div">
         <form class="control-form">
           <h2>Controls</h2>
-          <label for="time-scale">Time scale: </label>
+          <label for="arrangement">Cosmological Arrangement:</label>
+          <select id="arrangement" name="arrangements-list">
+            <option value="earth-moon-system">Earth-Moon System</option>
+            <option value="sun-earth-system">Sun-Earth System</option>
+          </select><br>
+          <label for="ts">Time scale: </label>
           <input id="ts" type="number" name="time-scale" min="1" value="128"><br>
-          <label for="size-scale">Size scale: </label>
-          <input id="ss" type="number" name="size-scale" value="1100000">
+          <label for="ss">Size scale: </label>
+          <input id="ss" type="number" name="size-scale" value="1100000"><br>
+          <label for="bi">Body Inflation:</label>
+          <input id="bi" type="number" name="body-inflation" value="1">
           <hr>
+          <!-- <img src="commence.svg" alt="play-icon"> -->
           <input id="start-but" type="button" name="start-simulation" value="Commence">
           <input id="pause-but" type="button" name="pause-simulation" value="Pause">
           <input id="reset-but" type="button" name="reset-params" value="Reset">
+          <input id="edit-but" type="button" name="edit" value="Add Enitities">
         </form>
       </div>
 

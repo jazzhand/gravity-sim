@@ -13,7 +13,7 @@ hr {
 
 header {
   box-shadow: 0 4px 16px #222;
-  padding: 32px 0;
+  padding: 24px 0;
   background-color: #3ae;
 }
 
@@ -21,7 +21,7 @@ header h1 {
   margin: 0;
   text-align: center;
   font-family: sans-serif;
-  font-size: 4em;
+  font-size: 3em;
   color: white;
 }
 
@@ -49,7 +49,8 @@ header h1 {
 
 }
 
-#controls-div input {
+#controls-div input,
+#controls-div select {
   font-family: inherit;
   font-size: inherit;
 }
@@ -70,11 +71,26 @@ header h1 {
   border-color: #44aaff;
 }
 
+/* Snatched from some stackoverflow solution
+  This hides the spinners on the the number input fields
+*/
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button
 {
   -webkit-appearance: none;
   margin: 0;
+}
+
+#controls-div select {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid black;
+  color: white;
+  width: 100%;
+}
+
+#controls-div select option {
+  color: black;
 }
 
 #controls-div input[type="button"] {
