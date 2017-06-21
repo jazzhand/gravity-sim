@@ -19,18 +19,28 @@
             <option value="earth-moon-system">Earth-Moon System</option>
             <option value="sun-earth-system">Sun-Earth System</option>
           </select><br>
-          <label for="ts">Time scale: </label>
-          <input id="ts" type="number" name="time-scale" min="1" value="128"><br>
-          <label for="ss">Size scale: </label>
-          <input id="ss" type="number" name="size-scale" value="1100000"><br>
-          <label for="bi">Body Inflation:</label>
-          <input id="bi" type="number" name="body-inflation" value="1">
-          <hr>
-          <!-- <input id="start-but" type="button" name="start-simulation" value="Commence">
-          <input id="pause-but" type="button" name="pause-simulation" value="Pause">
-          <input id="reset-but" type="button" name="reset-params" value="Reset">
-          <input id="edit-but" type="button" name="edit" value="Add Enitities"> -->
-
+          <table>
+            <caption>Settings</caption>
+            <thead>
+              <tr>
+                <th>Property</th><th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><label for="ts">Time scale:</label></td>
+                <td><input id="ts" type="number" name="time-scale" maxlength="4" min="1" value="128"></td>
+              </tr>
+              <tr>
+                <td><label for="ss">Size scale: </label></td>
+                <td><input id="ss" type="number" name="size-scale" value="1100000"></td>
+              </tr>
+              <tr>
+                <td><label for="bi">Body Inflation:</label></td>
+                <td><input id="bi" type="number" name="body-inflation" step="0.1" value="1"></td>
+              </tr>
+            </tbody>
+          </table>
           <button id="start-but" type="button"><span>Commence</span></button>
           <button id="pause-but" type="button"><span>Pause</span></button>
           <button id="reset-but" type="button"><span>Reset</span></button>
