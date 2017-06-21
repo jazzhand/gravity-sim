@@ -136,8 +136,8 @@ class Renderer {
   }
 
   stop() {
+    // attempt to stop the animation only if it is playing
     if (this.animation) {
-      console.log("what");
       window.cancelAnimationFrame(this.animation);
       this.animation = null;
     }

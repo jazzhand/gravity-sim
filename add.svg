@@ -5,15 +5,15 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   width="32"
-   height="32"
-   id="svg4152"
+   viewBox="0 0 32 32"
    version="1.1"
-   viewBox="0 0 32 32">
+   id="svg4764"
+   height="32"
+   width="32">
   <defs
-     id="defs4154" />
+     id="defs4766" />
   <metadata
-     id="metadata4157">
+     id="metadata4769">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -24,8 +24,11 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <path
-     d="m 30.62,16 c 0,2.494153 -24.8400001,16.835534 -27.0000001,15.588457 -2.16,-1.247076 -2.16,-29.9298377 0,-31.17691427 C 5.7799999,-0.83553385 30.62,13.505847 30.62,16 Z"
-     id="path5908"
-     style="opacity:1;fill:#f0f0f0;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <g
+     id="layer1">
+    <path
+       id="rect5312"
+       d="M 12 0 L 12 12 L 0 12 L 0 20 L 12 20 L 12 32 L 20 32 L 20 20 L 32 20 L 32 12 L 20 12 L 20 0 L 12 0 z "
+       style="opacity:1;fill:#f0f0f0;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  </g>
 </svg>
