@@ -158,7 +158,7 @@ class Controls {
     this.system = sys;
 
     /* Controls Div */
-    let ctrlDiv = document.getElementById('controls-div');
+    let settingsTbl = document.getElementById('settings-tbl');
 
     /* Input fields */
     let tsField = document.getElementById("ts");
@@ -174,7 +174,7 @@ class Controls {
     ssField.value = sys.getSizeScale();
 
 
-    ctrlDiv.addEventListener("keyup", function(e) {
+    settingsTbl.addEventListener("keyup", function(e) {
       if (e.keyCode == 13) {
         startBut.click();
       }

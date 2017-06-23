@@ -19,8 +19,10 @@
             <option value="earth-moon-system">Earth-Moon System</option>
             <option value="sun-earth-system">Sun-Earth System</option>
           </select><br>
-          <table>
-            <caption>Settings</caption>
+          <button id="edit-but" type="button"><span>Edit</span></button>
+
+          <table id="settings-tbl">
+            <caption>Simulation Settings</caption>
             <thead>
               <tr>
                 <th>Property</th><th>Value</th>
@@ -41,11 +43,47 @@
               </tr>
             </tbody>
           </table>
-          <button id="start-but" type="button"><span>Commence</span></button>
-          <button id="pause-but" type="button"><span>Pause</span></button>
-          <button id="reset-but" type="button"><span>Reset</span></button>
-          <button id="edit-but" type="button"><span>Add stuff</span></button>
         </form>
+        <div id="simulation-control-panel">
+          <button class="ctrl-but" id="start-but" type="button">
+            <svg
+              width="32"
+              height="32"
+              id="play-icon"
+              viewBox="0 0 32 32">
+              <path
+              d="m 30.62,16 c 0,2.494153 -24.8400001,16.835534 -27.0000001,15.588457 -2.16,-1.247076 -2.16,-29.9298377 0,-31.17691427 C 5.7799999,-0.83553385 30.62,13.505847 30.62,16 Z"
+                id="path5908"/>
+            </svg>
+          </button>
+          <button class="ctrl-but" id="pause-but" type="button">
+            <svg
+               viewBox="0 0 32 32"
+               id="pause-icon"
+               height="32"
+               width="32">
+              <path
+                id="path4148"
+                 d="m 11.913708,31.400001 c -0.8,0.8 -10.5137082,0.8 -11.31370817,0 -0.80000001,-0.8 -0.80000004,-10.513708 -4e-8,-11.313708 0.80000001,-0.8 10.51370821,-0.8 11.31370821,0 0.8,0.8 0.8,10.513708 0,11.313708 z"
+                 transform="matrix(0.63929889,0,0,2.5571956,4.0000001,-49.83026)" />
+              <path
+                id="path4150"
+                 transform="matrix(0.63929889,0,0,2.5571956,20,-49.83026)"
+                 d="m 11.913708,31.400001 c -0.8,0.8 -10.5137082,0.8 -11.31370817,0 -0.80000001,-0.8 -0.80000004,-10.513708 -4e-8,-11.313708 0.80000001,-0.8 10.51370821,-0.8 11.31370821,0 0.8,0.8 0.8,10.513708 0,11.313708 z" />
+            </svg>
+          </button>
+          <button class="ctrl-but" id="reset-but" type="button">
+            <svg
+               width="32"
+               height="32"
+               id="svg4152"
+               viewBox="0 0 32 32">
+              <path
+                 d="m 18.143061,0.0141339 c -0.642822,-0.37094597 -8.5709602,6.6765236 -8.5709602,7.4184153 0,0.741892 7.9281382,7.7893628 8.5709602,7.4184158 0.20584,-0.118781 0.338213,-1.703215 0.412227,-3.735352 a 6.4282205,6.424971 0 0 1 3.873254,5.891649 6.4282205,6.424971 0 0 1 -6.428221,6.42497 6.4282205,6.424971 0 0 1 -6.4282202,-6.42497 6.4282205,6.424971 0 0 1 0.8663032,-3.210395 L 3.0099591,9.5114631 A 14.999182,14.9916 0 0 0 5.3933391,27.608884 14.999182,14.9916 0 0 0 23.499911,29.991057 14.999182,14.9916 0 0 0 30.488928,13.127599 14.999182,14.9916 0 0 0 18.488327,2.2415407 C 18.408239,0.98899519 18.294544,0.10154784 18.143061,0.0141339 Z"
+                 id="path4708" />
+              </svg>
+          </button>
+        </div>
       </div>
 
       <canvas id="canvas" width="800" height="800">
