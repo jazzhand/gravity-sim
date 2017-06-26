@@ -154,11 +154,12 @@ class Renderer {
 
 //export
 class Controls {
-  constructor(sys, rend) {
+  constructor(sys, rend, arrs) {
     this.system = sys;
 
     /* Controls Div */
-    let settingsTbl = document.getElementById('settings-tbl');
+    let arrSelector = document.getElementById("arrangement-selector");
+    let settingsTbl = document.getElementById("settings-tbl");
 
     /* Input fields */
     let tsField = document.getElementById("ts");
@@ -169,10 +170,17 @@ class Controls {
     let pauseBut = document.getElementById("pause-but");
     let resetBut = document.getElementById('reset-but');
 
+    /* Populate the select list */
+    for(let i = 0; i < arrs.length; i++) {
+      let opt = document.createElement("option");
+      opt.innerHTML = arrs[i].title;
+      opt.value = arrs[i].title;
+      arrSelector.appendChild(opt);
+    }
+
     /* Populate fields with initial values */
     tsField.value = sys.getTimeScale();
     ssField.value = sys.getSizeScale();
-
 
     settingsTbl.addEventListener("keyup", function(e) {
       if (e.keyCode == 13) {
@@ -211,20 +219,23 @@ class Controls {
     },
     {
       title: "Sun-Earth System",
-      scale: 1100000,
+      scale: 9e24,
       entities: {
-        sun: [7.347673e22, 400 - 384400000/1100000, 400, 0, 1023.006, 1737000],
-        earth: [5.972e24, 400, 400, 0.1, -12.6, 6371000]
+        sun: [1.989e30, 400, 400, 0, 0, 695700000],
+        earth: [5.972e24, 28, 400, 0.1, 1200.6, 6371000]
       }
     }
   ];
+
+  // let earth = new Entity(...arrangements[0].entities.earth);
+  // let moon = new Entity(...arrangements[0].entities.moon);
 
   let earth = new Entity(...arrangements[0].entities.earth);
   let moon = new Entity(...arrangements[0].entities.moon);
 
   let system = new System([earth, moon], arrangements[0].scale);
   let renderer = new Renderer('canvas');
-  let controls = new Controls(system, renderer);
+  let controls = new Controls(system, renderer, arrangements);
   let ctx = renderer.context();
 
   // Some constants
@@ -328,5 +339,6 @@ class Controls {
   }
 
   renderer.setAnimationRoutine(animationStep);
+  // system.setTimeScale(1);
   renderer.animate();
 })();
