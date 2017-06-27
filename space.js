@@ -1,15 +1,18 @@
-const scale = 1100000;
+// const scale = 1100000;
 
-//export
+/**
+ * @class
+ * Represents an object in space with significant mass
+ *
+ */
 class Entity {
-  /* Represents an object in space with significant mass */
   constructor(m, x, y, vx, vy, r) {
     this.mass = m; // real mass
     this.locX = x; // canvas x coordinate
     this.locY = y; // canvas y coordinate
     this.velX = vx; // real x velocity (m/s)
     this.velY = vy; // real y velocity (m/s)
-    this.radius = r / scale; // radius for canvas arcs
+    this.radius = r; // radius for canvas arcs
   }
 
   static distanceBetween(e1, e2) {
@@ -19,12 +22,20 @@ class Entity {
   }
 }
 
-//export
+/**
+ * @class
+ * Represents the cosmological system of entities governed by newtonian physics
+ */
 class System {
-  /* Represents the system of entities with newtonian physics */
-  constructor(ents) {
+  /**
+   * The constructor of the System class. This creates a System object
+   * which takes in a an array of astronomical entities.
+   * @param {Entity[]} [ents] - The array of Entities that this System will
+   * be initialised with.
+   */
+  constructor(scale, ents) {
     if (!ents) {
-      this.entities = []
+      this.entities = [];
     } else {
       this.entities = ents; // array of entities in the system
     }
@@ -106,13 +117,27 @@ class System {
   }
 }
 
-//export
+/**
+ * This class is the renderer to the System class.
+ * It draws the System with all it's entities to the screen.
+ */
 class Renderer {
+  /**
+   * The contructor for the Renderer takes in an ID of a <canvas> element and
+   * initialises the Renderer.
+   * @param  {string} canvasID The ID string of the <canvas> which this Renderer
+   *                           will draw on.
+   * @return {Renderer}        A new Renderer object is returned
+   */
   constructor(canvasID) {
     this.canvas = document.getElementById(canvasID);
     this.ctx = this.canvas.getContext('2d');
+    this.origin = [this.canvas.width/2, this.canvas.height/2];
     this.animation = null;
     this.render = null;
+
+    // Set the origin to the center of the canvas instead of the top left.
+    this.ctx.translate(this.origin[0], this.origin[1]);
   }
 
   setAnimationRoutine(renderFunc) {
@@ -143,16 +168,32 @@ class Renderer {
     }
   }
 
+  clearBackground(col) {
+    this.ctx.save();
+    this.ctx.translate(-this.origin[0], -this.origin[1]);
+    this.ctx.fillStyle = col;
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillStyle = "black";
+    this.ctx.restore();
+  }
+
+  /**
+   * Gets the current width of this Renderer's canvas element.
+   * @return {Number} The width of the canvas.
+   */
   canvasWidth() {
     return this.canvas.width;
   }
 
+  /**
+   * Gets the current height of this Renderer's canvas element.
+   * @return {Number} The height of the canvas.
+   */
   canvasHeight() {
     return this.canvas.height;
   }
 }
 
-//export
 class Controls {
   constructor(sys, rend, arrs) {
     this.system = sys;
@@ -196,6 +237,10 @@ class Controls {
 
     pauseBut.addEventListener("click", function() {
       rend.stop();
+      let ctx = rend.context();
+      ctx.fillStyle = "white";
+      ctx.font = "bold 24px Monospace";
+      ctx.fillText("PAUSED", -40, -100);
     });
 
     resetBut.addEventListener("click", function() {
@@ -213,27 +258,25 @@ class Controls {
       title: "Earth-Moon System",
       scale: 1100000,
       entities: {
-        earth: [5.972e24, 400, 400, 0.1, -12.6, 6371000],
-        moon: [7.347673e22, 400 - 384400000/1100000, 400, 0, 1023.006, 1737000]
+        earth: [5.972e24, 0, 0, 0.01, -12.6, 6371000],
+        moon: [7.347673e22, -384400000/1100000, 0, 0, 1023.006, 1737000]
       }
     },
     {
       title: "Sun-Earth System",
-      scale: 9e24,
+      scale: 11000000,
       entities: {
-        sun: [1.989e30, 400, 400, 0, 0, 695700000],
-        earth: [5.972e24, 28, 400, 0.1, 1200.6, 6371000]
+        sun: [1.989e30, 0, 0, 0, 0, 695700000],
+        earth: [5.972e24, 0, -389, 1200, 0, 6371000]
       }
     }
   ];
 
-  // let earth = new Entity(...arrangements[0].entities.earth);
-  // let moon = new Entity(...arrangements[0].entities.moon);
-
+  let scale = arrangements[0].scale;
   let earth = new Entity(...arrangements[0].entities.earth);
   let moon = new Entity(...arrangements[0].entities.moon);
 
-  let system = new System([earth, moon], arrangements[0].scale);
+  let system = new System(scale, [earth, moon]);
   let renderer = new Renderer('canvas');
   let controls = new Controls(system, renderer, arrangements);
   let ctx = renderer.context();
@@ -260,14 +303,22 @@ class Controls {
     cont.restore();
   }
 
-  function animationStep(ts) {
-    ctx.fillStyle = colBG;
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    ctx.fillStyle = "black";
+  function drawEntity(cont, col, x, y, r) {
+    cont.fillStyle = col;
+    cont.beginPath();
+    cont.arc(x, y, r, 0, 2*Math.PI);
+    cont.shadowBlur = 4 * r;
+    cont.shadowColor = col;
+    cont.fill();
+  }
 
+  function animationStep(ts) {
+    scale = system.getSizeScale();
     let bodies = system.getEntities();
     let b1 = bodies[0]; //earth
     let b2 = bodies[1]; //moon
+
+    renderer.clearBackground(colBG);
 
     // Draw line between Earth and moon
     ctx.beginPath();
@@ -278,20 +329,10 @@ class Controls {
     ctx.stroke();
 
     // Draw the Earth
-    ctx.fillStyle = colEarth;
-    ctx.beginPath();
-    ctx.arc(b1.locX, b1.locY, b1.radius, 0, 2*Math.PI);
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = "#6bf";
-    ctx.fill();
+    drawEntity(ctx, colEarth, b1.locX, b1.locY, b1.radius/scale);
 
     // Draw the Moon
-    ctx.fillStyle = colMoon;
-    ctx.beginPath();
-    ctx.arc(b2.locX, b2.locY, b2.radius, 0, 2*Math.PI);
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = "white"
-    ctx.fill();
+    drawEntity(ctx, colMoon, b2.locX, b2.locY, b2.radius/scale);
 
     // Stop drawing shadows/glows
     ctx.shadowBlur = 0;
@@ -299,9 +340,9 @@ class Controls {
     // Draw distance label
     ctx.fillStyle = "white";
     ctx.font = "12px Monospace";
-    ctx.fillText((scale/1000 * Entity.distanceBetween(b1, b2)).toPrecision(8) + " km",
-     0 + b1.locX + 0.3*(b2.locX - b1.locX),
-    20 + b1.locY + 0.3*(b2.locY - b1.locY));
+    ctx.fillText("Distance between Earth and Moon: " +
+    (scale/1000 * Entity.distanceBetween(b1, b2)).toPrecision(8) + " km",
+     10 - canvasWidth/2, 20 - canvasHeight/2);
 
     // Draw Earth label
     ctx.fillText("Earth", b1.locX - 20, b1.locY - 28);
@@ -311,10 +352,10 @@ class Controls {
 
     // Draw center cross
     ctx.beginPath();
-    ctx.moveTo(canvasWidth/2, canvasHeight/2 - 10);
-    ctx.lineTo(canvasWidth/2, canvasHeight/2 + 10);
-    ctx.moveTo(canvasWidth/2 - 10, canvasHeight/2);
-    ctx.lineTo(canvasWidth/2 + 10, canvasHeight/2);
+    ctx.moveTo(0, -10);
+    ctx.lineTo(0, 10);
+    ctx.moveTo(-10, 0);
+    ctx.lineTo(10, 0);
     ctx.lineWidth = 1;
     ctx.strokeStyle = "white";
     ctx.stroke();
@@ -322,23 +363,22 @@ class Controls {
     // Draw other information
     let ev = Math.sqrt(b1.velX*b1.velX + b1.velY*b1.velY);
     let mv = Math.sqrt(b2.velX*b2.velX + b2.velY*b2.velY);
-    ctx.fillText("Earth's velocity (m/s): " + ev.toPrecision(6), 10, 24);
-    //ctx.fillText("Earth's yVel (m/s): " + b1.velY.toPrecision(6), 10, 20);
-    ctx.fillText("Moon's velocity (m/s): " + mv.toPrecision(6), 10, 64);
+    ctx.fillText("Earth's velocity (m/s): " + ev.toPrecision(6),
+      canvasWidth/2 - 300, 20 - canvasHeight/2);
+    ctx.fillText("Moon's velocity (m/s): " + mv.toPrecision(6),
+      canvasWidth/2 - 300, 40 - canvasHeight/2);
 
     let earthVelocityAngle = Math.atan2(-b1.velY, b1.velX);
     let moonVelocityAngle = Math.atan2(-b2.velY, b2.velX);
-    // ctx.fillText("angle: " + moonVelocityAngle, 10, 100);
 
     // Draw Earth's velocity vector
-    drawVelocityVector(ctx, earthVelocityAngle, 256, 20);
+    drawVelocityVector(ctx, earthVelocityAngle, b1.locX, b1.locY);
     // Draw Moon's velocity vector
-    drawVelocityVector(ctx, moonVelocityAngle, 256, 60);
+    drawVelocityVector(ctx, moonVelocityAngle, b2.locX, b2.locY);
 
     system.physicsStep(ts);
   }
 
   renderer.setAnimationRoutine(animationStep);
-  // system.setTimeScale(1);
-  renderer.animate();
+  // renderer.animate();
 })();
