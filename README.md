@@ -1,5 +1,6 @@
 # Gravity Simulator
----
+
+![Screenshot of Gravity Sim](./imgs/screenshot_grav_sim.png)
 
 ## What
 
@@ -18,4 +19,3 @@ These entities are governed by Newton's law of universal gravitation.
 1. Clone it.
 2. Once cloned, open the view.html file in your browser of choice.
 3. Play with it.
-
