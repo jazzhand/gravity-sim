@@ -131,7 +131,7 @@ input[type=number]::-webkit-outer-spin-button
   color: black;
 }
 
-#edit-but {
+.arr-but {
   background: grey;
   border: 4px solid white;
   box-shadow: 0 4px 0 -2px black;
@@ -139,7 +139,7 @@ input[type=number]::-webkit-outer-spin-button
   padding: 8px;
 }
 
-#edit-but:hover {
+.arr-but:hover {
   box-shadow: 0 6px 0 -2px black;
 }
 

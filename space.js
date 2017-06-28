@@ -380,5 +380,8 @@ class Controls {
   }
 
   renderer.setAnimationRoutine(animationStep);
+  renderer.render();
+  ctx.font = "bold 24px Monospace";
+  ctx.fillText("Press Play", -60, -100);
   // renderer.animate();
 })();
